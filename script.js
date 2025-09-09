@@ -5,7 +5,9 @@ const exibeLista = document.getElementById("exibeLista");
 const tarefas = [];
 
 function exibirTarefas() {
-  exibeLista.innerHTML = "";
+  while (exibeLista.firstChild) {
+    exibeLista.removeChild(exibeLista.firstChild);
+  }
 
   for (let i = 0; i < tarefas.length; i++) {
     const li = document.createElement("li");
@@ -13,41 +15,42 @@ function exibirTarefas() {
 
     const botaoExcluir = document.createElement("button");
     botaoExcluir.textContent = "Excluir";
-    botaoExcluir.setAttribute("data-index", i);
-    li.appendChild(botaoExcluir);
+    botaoExcluir.dataset.index = i;
 
+    li.appendChild(botaoExcluir);
     exibeLista.appendChild(li);
   }
 }
 
-botaoAdicionar.addEventListener("click", () => {
-  const textoLista = texto.value;
+function adicionarTarefa() {
+  const tarefa = texto.value.trim();
 
-  if (textoLista !== "") {
-    tarefas.push(textoLista);
-    texto.value = "";
-    exibirTarefas();
-  } else {
-    alert("Por favor, digite uma tarefa!");
+  switch (tarefa) {
+    case "":
+      alert("A tarefa não pode estar vazia!");
+      break;
+    case "exemplo":
+      alert("Essa é uma tarefa de exemplo. Adicione algo real!");
+      break;
+    default:
+      tarefas.push(tarefa);
+      texto.value = "";
+      exibirTarefas();
   }
+}
+
+botaoAdicionar.addEventListener("click", adicionarTarefa);
+
+texto.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") adicionarTarefa();
 });
 
-exibeLista.addEventListener("click", (event) => {
-  const elementoClicado = event.target;
-  const acao = elementoClicado.textContent;
-
-  switch (acao) {
-    case "Excluir":
-      const index = parseInt(elementoClicado.getAttribute("data-index"));
-
-      if (index >= 0) {
-        tarefas.splice(index, 1);
-        exibirTarefas();
-      }
-      break;
-
-    default:
-      console.log("Nenhuma ação válida foi detectada.");
-      break;
+exibeLista.addEventListener("click", (e) => {
+  if (e.target.tagName === "BUTTON") {
+    const index = parseInt(e.target.dataset.index, 10);
+    if (!isNaN(index)) {
+      tarefas.splice(index, 1);
+      exibirTarefas();
+    }
   }
 });
