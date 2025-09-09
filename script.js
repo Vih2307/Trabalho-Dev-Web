@@ -11,7 +11,7 @@ function exibirTarefas() {
 
   for (let i = 0; i < tarefas.length; i++) {
     const li = document.createElement("li");
-    li.textContent = tarefas[i] + " ";
+    li.textContent = tarefas[i];
 
     const botaoExcluir = document.createElement("button");
     botaoExcluir.textContent = "Excluir";
@@ -42,12 +42,14 @@ function adicionarTarefa() {
 botaoAdicionar.addEventListener("click", adicionarTarefa);
 
 texto.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") adicionarTarefa();
+  if (e.key === "Enter") {
+    adicionarTarefa();
+  }
 });
 
 exibeLista.addEventListener("click", (e) => {
   if (e.target.tagName === "BUTTON") {
-    const index = parseInt(e.target.dataset.index, 10);
+    const index = parseInt(e.target.dataset.index);
     if (!isNaN(index)) {
       tarefas.splice(index, 1);
       exibirTarefas();
